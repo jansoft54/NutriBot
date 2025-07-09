@@ -1,0 +1,18 @@
+[project]
+name = "meal-planner-bot"
+version = "0.1.0"
+requires-python = ">=3.10,<4.0"
+dependencies = [
+  "fastapi>=0.95.0",
+  "uvicorn>=0.22.0",
+  "jinja2>=3.1.2",
+  "gradio>=5.35.0",
+  "langgraph>=0.0.37",
+  "google-genai>=0.1.0",
+  "python-dotenv>=1.0.0",
+  "langchain>=0.3.26",
+  "langchain-google-genai>=2.1.6",
+  "setuptools>=80.9.0",
+
+
+]
