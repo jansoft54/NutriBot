@@ -1,25 +1,25 @@
-GOAL_EXTRACTION_PROMPT = """Du bist ein MealPlanner-Assistant.
+GOAL_EXTRACTION_PROMPT = """You are a Meal Planner Assistant.
 
-Original-Prompt: "{prompt}"
+Original Prompt: "{prompt}"
 
-Bereits extrahierte Daten (JSON): {extracted_json}
+Already Extracted Data (JSON): {extracted_json}
 
-Antworte ausschließlich im JSON-Format mit folgenden Feldern:
-- extracted: Alle bisher bekannten Attribute zur Person (Alter, Ziel, Gewicht, Größe, Aktivität, Diät, Zeit zum Kochen, Budget, etc.)
-- additional_question: Eine **gezielte und relevante** Rückfrage, die **hilft, das Ziel besser zu erreichen**, ohne zu überfordern. Falls alle wichtigen Infos bereits vorhanden sind, gib einfach "" zurück.
+Please respond exclusively in JSON format with the following fields:
+- extracted: All currently known attributes about the person (age, goal, weight, height, activity level, diet, time for cooking, budget, etc.).
+- additional_question: A **specific and relevant** follow-up question that **helps to better achieve the goal** without being overwhelming. If all important information is already available, simply return an empty string ("").
 
-Berücksichtige für die Extraktion und Rückfrage insbesondere diese Kategorien, aber frage **nur das Nötigste**, um die nächsten sinnvollen Schritte für einen passenden Ernährungsplan zu ermöglichen:
-- Körperliche Merkmale (Alter, Geschlecht, Gewicht, Größe)
-- Aktivitätslevel und Ziel (z. B. Muskelaufbau, Abnehmen)
-- Gesundheit (z. B. Allergien, Erkrankungen) – nur wenn relevant
-- Ernährungsvorlieben oder -einschränkungen
-- Budget für die Mahlzeit
+For both the extraction and the follow-up question, consider these categories in particular, but ask **only for what is necessary** to enable the next meaningful steps for a suitable meal plan:
+- Physical characteristics (age, gender, weight, height)
+- Activity level and goal (e.g., muscle building, weight loss)
+- Health (e.g., allergies, medical conditions) – only if relevant
+- Dietary preferences or restrictions
+- Budget for meals
 
-Ziel: Ein möglichst vollständiges, aber **nutzerfreundlich aufgebautes** JSON, das sich bei Bedarf in wenigen, sinnvollen Schritten ergänzt – ohne den Nutzer mit Rückfragen zu überfordern.
+Goal: To create a JSON that is as complete as possible but **structured in a user-friendly way**, which can be supplemented in a few, sensible steps if needed – without overwhelming the user with follow-up questions.
 
 PREVIOUS CONVERSATION: {conversation}
 
-PLEASE AKE SURE YOUR OUTPUT IS VALID JSON
+PLEASE MAKE SURE YOUR OUTPUT IS VALID JSON
 """
 
 NUTRITION_AGENT_SYSTEM_PROMPT = """
@@ -35,17 +35,17 @@ NUTRITION_AGENT_INFO_PROMPT = """
     Please populate the fields of your tool accordingly and perform the macro calculation: {extracted_json}
 """
 NUTRITION_AGENT_ASK_APPROVAL = """
- You are given the output of a tool call that includes the user's daily macronutrient recommendations (such as calories, protein, fat, and carbohydrates).
+You are given the output of a tool call that includes the user's daily macronutrient recommendations (such as calories, protein, fat, and carbohydrates).
 
 Your task is to:
 
-1. **Present** the provided macronutrient stats in a few short, bullet‑style sentences. Explain in 1–2 Sätzen, was du mit den Daten gemacht hast.
-2. **Ergänze** die Übersicht um zusätzliche Gesundheits‑Nährwerte (z. B. sodium_mg, fiber_g, saturated_fat_g, cholesterol_limit_mg, potassium_mg), die das Tool nicht geliefert hat, aber auf Basis des Nutzerprofils relevant sind.
-3. **Gib evidenzbasierte Empfehlungen** entsprechend des Profils (z. B. Sodium‑Limit bei Bluthochdruck, Kohlenhydratstrategie bei Diabetes, Ballaststoffempfehlung bei Verdauungsproblemen, gesättigte Fettsäuren/Cholesterin bei kardiovaskulärem Risiko, allergiebezogene Hinweise).
-4. **Liste konkret auf**, welche Lebensmittel vermieden und welche bevorzugt werden sollen.
-5. **Erzeuge exakt ein gültiges JSON‑Objekt** mit zwei Schlüsseln:
-   - `"conversation_answer"`: **ein einziger String**, in dem du die Inhalte **als Liste** auflistest (z. B. jede Zeile beginnt mit `• ` oder `- `).
-   - `"nutrition_values"`: Ein Objekt mit allen Nährstoffen (Tool‑Daten plus Ergänzungen) und Arrays `"foods_to_avoid"` sowie `"foods_to_favor"`.
+1.  **Present** the provided macronutrient stats in a few short, bullet-style sentences. Explain in 1-2 sentences what you have done with the data.
+2.  **Supplement** the overview with additional health-related nutritional values (e.g., sodium_mg, fiber_g, saturated_fat_g, cholesterol_limit_mg, potassium_mg) that the tool did not provide but are relevant based on the user's profile.
+3.  **Provide evidence-based recommendations** according to the profile (e.g., sodium limit for hypertension, carbohydrate strategy for diabetes, fiber recommendation for digestive issues, saturated fats/cholesterol for cardiovascular risk, allergy-related advice).
+4.  **Specifically list** which foods should be avoided and which should be favored.
+5.  **Generate exactly one valid JSON object** with two keys:
+    - `"conversation_answer"`: **a single string** in which you list the content **as a list** (e.g., each line starts with `• ` or `- `).
+    - `"nutrition_values"`: An object with all nutrients (tool data plus additions) and arrays for `"foods_to_avoid"` and `"foods_to_favor"`.
 
 **Example output structure:**
 ```json
@@ -64,6 +64,4 @@ Your task is to:
     "foods_to_avoid": ["salty processed foods", "sugary drinks"],
     "foods_to_favor": ["whole grains", "legumes", "vegetables", "lean proteins"]
   }
-}
-
-"""
+}"""
