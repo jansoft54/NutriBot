@@ -8,8 +8,7 @@ import os
 dotenv_path = Path(__file__).resolve().parent.parent / '.env'
 load_dotenv(dotenv_path=dotenv_path)
 
-# os.getenv("SPOONACULAR_API_KEY")
-API_KEY = "b6c11f7d61d140bcaebf8799c50a0c9c"
+API_KEY = os.getenv("SPOONACULAR_API_KEY")
 if not API_KEY:
     raise RuntimeError("Bitte setze SPOONACULAR_API_KEY in deiner .env-Datei")
 
