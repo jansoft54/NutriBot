@@ -1,6 +1,7 @@
 from langgraph.graph import StateGraph, START, END
 from pydantic import ValidationError
 from src.agents.agent import Agent
+from src.agents.recipeagent import RecipeAgent
 from src.prompt_templates.templates import GOAL_EXTRACTION_PROMPT
 from langchain_core.prompts import PromptTemplate
 from langchain.chains.llm import LLMChain
@@ -29,20 +30,27 @@ class NutritionAgent(Agent):
         builder.add_node(NutritionAgent.TOOL_CALL_NODE, self.tool_node)
         builder.add_node(NutritionAgent.SHOW_TOOL_RESULTS_NODE,
                          self.show_response)
-
+#
         return builder
 
     def tool_node(self, state: dict):
-       # print(state["messages"][-1])
+      #  raise Exception()
         result = []
+        assert len(state["messages"][-1].tool_calls) > 0
+
         for tool_call in state["messages"][-1].tool_calls:
             tool = self.tools_by_name[tool_call["name"]]
+
             observation = tool.invoke(tool_call["args"])
+            print("TOTAL ", observation)
             result.append(ToolMessage(content=observation,
                           tool_call_id=tool_call["id"]))
 
+       # print("####", result)
         return Command(
-            update={"messages":  result},
+            update={"messages":  result,
+                    "last_node": NutritionAgent.TOOL_CALL_NODE,
+                    },
             goto=NutritionAgent.SHOW_TOOL_RESULTS_NODE,
         )
 
@@ -50,16 +58,27 @@ class NutritionAgent(Agent):
         new_messages = [HumanMessage(content=str(state["extracted"]))] + state["messages"] + [HumanMessage(
             content=NUTRITION_AGENT_ASK_APPROVAL
         )]
-        msg = [HumanMessage(content=m.content) for m in new_messages]
+        msg = HumanMessage(content="\n".join(
+            [m.content for m in new_messages]))
         # print(msg)
         res = self.llm.invoke(
-            msg
+            [msg]
         )
+       # print("---", msg)
+       # print("---", res.content)
+       # print(res.content)
         answer = self.parse_json(res.content)
 
-        print("\n🤖", answer["conversation_answer"])
-
-        return {"nutrition": answer["nutrition_values"]}
+        # print("\n🤖", answer["conversation_answer"])
+        print("\n🤖", answer["nutrition_values"])
+        return Command(
+            update={
+                "nutrition":  answer["nutrition_values"],
+                "nutrition_text": answer["conversation_answer"],
+                "last_node": NutritionAgent.SHOW_TOOL_RESULTS_NODE,
+            },
+            goto=RecipeAgent.CALL_LLM_AND_API,
+        )
 
     def llm_call(self, state):
         res = self.llm.invoke(
@@ -74,7 +93,6 @@ class NutritionAgent(Agent):
             ]
 
         )
-
         return Command(
             update={
                 "messages":  [res]

@@ -39,7 +39,6 @@ class GoalsAgent(Agent):
              "extracted_json": state["extracted"],
              "conversation": "\n".join(self.conversation)})
         try:
-
             result = self.parse_json(raw)
         except ValidationError as e:
             return {"additional_question": "", "extracted": state["extracted"]}
@@ -51,16 +50,15 @@ class GoalsAgent(Agent):
         return Command(
             update={
                 "extracted": result["extracted"],
-                "additional_question": result["additional_question"]
+                "additional_question": result["additional_question"],
+                "last_node": GoalsAgent.EXTRACT_INFO_NODE,
             },
             goto=goto,
         )
 
     def ask_follow_up(self, state):
-        print("\n🤖", state["additional_question"])
         self.conversation.append(f"ASSISTANT:{state["additional_question"]}")
         return Command(
-            update={"prompt": input("YOU: "),
-                    "additional_question": None},
+            update={"last_node": GoalsAgent.ASK_QUESTION_NODE, },
             goto=GoalsAgent.EXTRACT_INFO_NODE,
         )
