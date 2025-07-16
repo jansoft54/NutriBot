@@ -5,7 +5,7 @@ from src.agents.nutritionagent import NutritionAgent
 from src.prompt_templates.templates import GOAL_EXTRACTION_PROMPT
 from langchain_core.prompts import PromptTemplate
 from langchain.chains.llm import LLMChain
-from langgraph.types import Command
+from langgraph.types import interrupt, Command
 
 import json
 
@@ -57,8 +57,14 @@ class GoalsAgent(Agent):
         )
 
     def ask_follow_up(self, state):
+        print("ASK")
         self.conversation.append(f"ASSISTANT:{state["additional_question"]}")
+        prompt = interrupt(
+            {"additional_question": state["additional_question"],
+             "last_node": GoalsAgent.ASK_QUESTION_NODE})
+
         return Command(
-            update={"last_node": GoalsAgent.ASK_QUESTION_NODE, },
+            update={"prompt": prompt,
+                    "last_node": GoalsAgent.ASK_QUESTION_NODE, },
             goto=GoalsAgent.EXTRACT_INFO_NODE,
         )

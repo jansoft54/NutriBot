@@ -8,11 +8,6 @@ import os
 dotenv_path = Path(__file__).resolve().parent.parent / '.env'
 load_dotenv(dotenv_path=dotenv_path)
 
-API_KEY = os.getenv("SPOONACULAR_API_KEY")
-API_KEY = "b6c11f7d61d140bcaebf8799c50a0c9c"
-if not API_KEY:
-    raise RuntimeError("Bitte setze SPOONACULAR_API_KEY in deiner .env-Datei")
-
 
 @tool
 def complex_search_recipes(
@@ -142,7 +137,7 @@ def complex_search_recipes(
             params[k] = params[k]*(1-delta)
         elif k.startswith("max"):
             params[k] = params[k]*(1+delta)
-
+    print("CALL", locals().items())
     response = requests.get(url, params=params)
     response.raise_for_status()
     return response.json()
@@ -194,7 +189,8 @@ def find_recipe_nutrient_match(recipes, nutrion_target):
                     macro_name = macro["name"].lower()
                     macro_name = f"min_{macro_name}" if f"min_{macro_name}" in meal_nutrition.keys(
                     ) else f"max_{macro_name}"
-
+                    if macro_name not in meal_nutrition.keys():
+                        continue
                     sum_ += (serving_size *
                              macro["amount"] - meal_nutrition[macro_name])**2
                 if sum_ < best_fit:

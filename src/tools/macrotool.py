@@ -93,7 +93,6 @@ def calc_makros(age: int,
                 goal: str,
                 diet: str,
                 bf_str: float | None,
-                surplus: float,
                 ppk: float
                 ):
     """
@@ -108,9 +107,10 @@ def calc_makros(age: int,
         goal: 'maintain', 'lose', 'gain', or 'muscle'
         diet: 'balanced' or 'keto'
         bf_str: Body fat % or None to estimate
-        surplus: % surplus for muscle gain
         ppk: Desired protein g per kg FFM
     """
+    print("CALL", locals().items())
+    surplus = 15
     sex = sex.lower()
     assert sex in ('male', 'female'), "sex must be 'male' or 'female'"
 
