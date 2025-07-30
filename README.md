@@ -2,6 +2,7 @@
 
 This is a meal planning assistant with generative AI and data APIs.
 
+[Watch Demo here](https://jumpshare.com/s/fhWyYRC3VbJxQpGl6ZmZ)
 ## Prerequisites
 
 Before you start, make sure you have the following installed on your system:
