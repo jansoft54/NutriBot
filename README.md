@@ -1,7 +1,3 @@
-Of course, here is a README file tailored to use `uv` for managing your project's dependencies and environment.
-
----
-
 # Meal Planner Bot
 
 This is a meal planning assistant with generative AI and data APIs.
