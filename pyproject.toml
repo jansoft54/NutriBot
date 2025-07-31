@@ -15,4 +15,5 @@ dependencies = [
   "setuptools>=80.9.0",
   "dotenv>=0.9.9",
   "openai>=1.96.1",
+  "langgraph-checkpoint-sqlite>=2.0.11"
 ]

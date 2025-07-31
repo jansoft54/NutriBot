@@ -36,6 +36,7 @@ class GoalsAgent(Agent):
         self.conversation.append(f"USER:{state["prompt"]}")
         raw = self.ask_llm(
             {"prompt": state["prompt"],
+             "saved_extracted": state["memory_extracted"],
              "extracted_json": state["extracted"],
              "conversation": "\n".join(self.conversation)})
         try:
