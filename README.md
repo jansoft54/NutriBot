@@ -3,6 +3,7 @@
 This is a meal planning assistant with generative AI and data APIs.
 
 [Watch Demo here](https://jumpshare.com/s/fhWyYRC3VbJxQpGl6ZmZ)
+
 ## Prerequisites
 
 Before you start, make sure you have the following installed on your system:
@@ -19,8 +20,8 @@ Follow these steps to get the project up and running.
 First, clone the project repository to your local machine.
 
 ```bash
-git clone https://github.com/your-username/meal-planner-bot.git
-cd meal-planner-bot
+git clone git@github.com:jansoft54/NutriBot.git
+cd NutriBot
 ```
 
 ### 2. Set Up Environment Variables
